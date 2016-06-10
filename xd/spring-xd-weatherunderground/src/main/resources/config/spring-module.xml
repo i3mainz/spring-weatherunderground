@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:int="http://www.springframework.org/schema/integration"
+	xmlns:int-http="http://www.springframework.org/schema/integration/http"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/integration/http http://www.springframework.org/schema/integration/http/spring-integration-http.xsd
+		http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration.xsd">
+
+	<int:channel id="input" />
+	<int:channel id="processChannel" />
+	<int:channel id="queryChannel" />
+	<int:channel id="preOut" />
+	<int:channel id="output" />
+
+	<beans profile="use-nearby-pws">
+		<int:chain input-channel="processChannel" output-channel="queryChannel">
+			<int:header-enricher>
+				<int:header name="POSQUERY" expression="${position}" />
+			</int:header-enricher>
+			<int-http:outbound-gateway id="WeatherUndergroundGeolookup"
+				url="http://api.wunderground.com/api/${apikey}/geolookup/q/{query}.json"
+				http-method="GET" expected-response-type="java.util.Map"
+				reply-timeout="5000">
+				<int-http:uri-variable name="query"
+					expression="headers['POSQUERY']" />
+			</int-http:outbound-gateway>
+			<int:header-enricher>
+				<int:header name="PWSQuery"
+					expression="new String('pws:').concat(payload.location.nearby_weather_stations.pws.station[0].id)" />
+				<int:header name="location"
+					expression="'POINT('+payload.location.nearby_weather_stations.pws.station[0].lon+' '+payload.location.nearby_weather_stations.pws.station[0].lat+')'" />
+				<int:header name="distance"
+					expression="@distanceCalc.calcDist(headers['POSQUERY'],payload.location.nearby_weather_stations.pws.station[0].lon,payload.location.nearby_weather_stations.pws.station[0].lat)">
+				</int:header>
+			</int:header-enricher>
+		</int:chain>
+		<bean id="distanceCalc"
+			class="de.i3mainz.springframework.xd.modules.weatherunderground.util.DistanceCalculator"></bean>
+	</beans>
+	<beans profile="use-query">
+		<int:bridge input-channel="processChannel" output-channel="queryChannel" />
+	</beans>
+	<beans profile="use-live-data">
+		<int:bridge input-channel="input" output-channel="processChannel" />
+		<int:chain input-channel="queryChannel" output-channel="preOut">
+			<int-http:outbound-gateway id="WeatherUndergroundConditions"
+				url="http://api.wunderground.com/api/${apikey}/conditions/q/{query}.json"
+				http-method="GET" expected-response-type="java.util.Map"
+				reply-timeout="5000">
+				<int-http:uri-variable name="query"
+					expression="${query}" />
+			</int-http:outbound-gateway>
+			<int:header-enricher>
+				<int:header name="location"
+					expression="'POINT('+payload.current_observation.observation_location.longitude+' '+payload.current_observation.observation_location.latitude+')'" />
+			</int:header-enricher>
+		</int:chain>
+	</beans>
+	<beans profile="use-history-data">
+		<bean id="dateConverter"
+			class="de.i3mainz.springframework.xd.modules.weatherunderground.util.DateParser">
+		</bean>
+		<int:header-enricher id="dateEnricher"
+			input-channel="input" output-channel="processChannel">
+			<int:header name="mappingTimestamp"
+				expression="@dateConverter.createDate(${date},${dateFormat})" />
+		</int:header-enricher>
+		<int:channel id="mergingChannel" />
+		<int:chain input-channel="queryChannel" output-channel="mergingChannel">
+			<int-http:outbound-gateway id="WeatherUndergroundHistory"
+				url="http://api.wunderground.com/api/${apikey}/history_{date}/q/{query}.json"
+				http-method="GET" expected-response-type="java.util.Map"
+				reply-timeout="5000">
+				<int-http:uri-variable name="date"
+					expression="@dateConverter.parse(headers['mappingTimestamp'],'yyyMMdd')" />
+				<int-http:uri-variable name="query"
+					expression="${query}" />
+			</int-http:outbound-gateway>
+		</int:chain>
+		<beans profile="use-timeFit">
+			<int:transformer id="bestFitTimeTransformer"
+				input-channel="mergingChannel" output-channel="preOut">
+				<bean
+					class="de.i3mainz.springframework.xd.modules.weatherunderground.filter.FindBestTimeFitTransformer" />
+			</int:transformer>
+		</beans>
+		<beans profile="use-timeRange">
+			<int:chain input-channel="mergingChannel" output-channel="preOut">
+				<int:splitter id="oberservationSplitter" expression="payload.history.observations" />
+				<int:filter id="timeRangeFilter">
+					<bean
+						class="de.i3mainz.springframework.xd.modules.weatherunderground.filter.TimeRangeFilter">
+						<property name="timeRange" value="${filterRange}" />
+					</bean>
+				</int:filter>
+			</int:chain>
+		</beans>
+		<beans profile="use-dailySummary">
+			<int:transformer input-channel="mergingChannel"
+				output-channel="preOut" expression="payload.history.dailysummary" />
+		</beans>
+	</beans>
+	<beans profile="use-forecast-data">
+		<int:bridge input-channel="input" output-channel="processChannel" />
+		<int-http:outbound-gateway id="WeatherUndergroundForecast"
+			request-channel="queryChannel"
+			url="http://api.wunderground.com/api/${apikey}/forecast/q/{query}.json"
+			http-method="GET" expected-response-type="java.util.Map"
+			reply-timeout="5000" reply-channel="preOut">
+			<int-http:uri-variable name="query" expression="${query}" />
+		</int-http:outbound-gateway>
+	</beans>
+	<beans profile="use-forecast-hourly-data">
+		<int:bridge input-channel="input" output-channel="processChannel" />
+		<int-http:outbound-gateway id="WeatherUndergroundHourly"
+			request-channel="queryChannel"
+			url="http://api.wunderground.com/api/${apikey}/hourly/q/{query}.json"
+			http-method="GET" expected-response-type="java.util.Map"
+			reply-timeout="5000" reply-channel="preOut">
+			<int-http:uri-variable name="query" expression="${query}" />
+		</int-http:outbound-gateway>
+	</beans>
+	<beans>
+		<int:header-enricher id="serviceIDEnricher"
+			input-channel="preOut" output-channel="output" default-overwrite="true">
+			<int:header name="SensorService" value="WeatherUnderground" />
+		</int:header-enricher>
+	</beans>
+
+</beans>
