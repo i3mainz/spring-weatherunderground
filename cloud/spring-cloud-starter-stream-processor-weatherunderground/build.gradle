@@ -30,7 +30,7 @@ group = 'org.springframework.cloud.stream.app'
 
 ext{
 	springCloudStreamVersion = '1.0.0.BUILD-SNAPSHOT'
-    geotoolsVersion = '14-SNAPSHOT'
+    geotoolsVersion = '14.0'
     lombokVersion = '1.16.8'
 }
 
