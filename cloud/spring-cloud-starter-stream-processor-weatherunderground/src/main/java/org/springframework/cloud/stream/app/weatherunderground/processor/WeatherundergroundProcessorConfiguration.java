@@ -14,6 +14,7 @@ import org.springframework.cloud.stream.annotation.EnableBinding;
 import org.springframework.cloud.stream.app.weatherunderground.processor.util.DistanceCalculator;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.integration.dsl.IntegrationFlow;
@@ -30,6 +31,7 @@ import org.springframework.messaging.MessageChannel;
 @EnableConfigurationProperties({ WeatherundergroundProcessorProperties.class,
         WeatherundergroundProcessorSearchProperties.class })
 @EnableBinding(Processor.class)
+@ComponentScan
 public class WeatherundergroundProcessorConfiguration {
     
 
