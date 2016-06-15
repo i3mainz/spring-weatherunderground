@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.util;
+package org.springframework.cloud.stream.app.weatherunderground.processor.util;
 
 import org.geotools.referencing.GeodeticCalculator;
 

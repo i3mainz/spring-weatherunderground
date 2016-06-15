@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.expression.Expression;
@@ -14,7 +14,7 @@ import lombok.Data;
  */
 @Data
 @ConfigurationProperties(prefix="weatherunderground")
-public class WeatherUndergroundProcessorProperties {
+public class WeatherundergroundProcessorProperties {
     private String mode = "LIVE";
     private String apikey;
     private Expression query;

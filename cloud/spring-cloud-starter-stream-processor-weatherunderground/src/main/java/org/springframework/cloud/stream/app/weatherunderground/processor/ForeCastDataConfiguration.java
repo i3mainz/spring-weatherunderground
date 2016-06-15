@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import java.net.URI;
 import java.util.Map;
@@ -26,11 +26,11 @@ import org.springframework.messaging.MessageChannel;
  */
 @Configuration
 @Import(SpelExpressionConverterConfiguration.class)
-@EnableConfigurationProperties(value = { WeatherUndergroundProcessorProperties.class })
+@EnableConfigurationProperties(value = { WeatherundergroundProcessorProperties.class })
 public class ForeCastDataConfiguration {
 
     @Autowired
-    private WeatherUndergroundProcessorProperties properties;
+    private WeatherundergroundProcessorProperties properties;
     
     @Autowired
     private MessageChannel start;

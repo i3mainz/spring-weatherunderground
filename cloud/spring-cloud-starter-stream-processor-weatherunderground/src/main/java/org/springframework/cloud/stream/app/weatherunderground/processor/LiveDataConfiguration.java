@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import java.util.Map;
 
@@ -25,12 +25,12 @@ import org.springframework.messaging.MessageChannel;
  */
 @Configuration
 @Import(SpelExpressionConverterConfiguration.class)
-@EnableConfigurationProperties({ WeatherUndergroundProcessorProperties.class })
+@EnableConfigurationProperties({ WeatherundergroundProcessorProperties.class })
 @ConditionalOnProperty(name = "weatherunderground.mode", havingValue = "LIVE")
 public class LiveDataConfiguration {
 
     @Autowired
-    private WeatherUndergroundProcessorProperties properties;
+    private WeatherundergroundProcessorProperties properties;
 
     @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/conditions/q/{query}.json")
     private String uri;

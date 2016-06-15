@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import java.util.concurrent.BlockingQueue;
 
@@ -13,6 +13,7 @@ import org.springframework.boot.test.IntegrationTest;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.boot.test.WebIntegrationTest;
 import org.springframework.cloud.stream.annotation.Bindings;
+import org.springframework.cloud.stream.app.weatherunderground.processor.WeatherundergroundProcessorConfiguration;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.messaging.Message;
@@ -21,8 +22,6 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-
-import de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.WeatherUndergroundProcessorConfiguration;
 
 /**
  * Some nice integration tests for WeatherUnderground processor
@@ -37,7 +36,7 @@ import de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.
 public abstract class WeatherUndergroundProcessorIntegrationTests {
 
     @Autowired
-    @Bindings(WeatherUndergroundProcessorConfiguration.class)
+    @Bindings(WeatherundergroundProcessorConfiguration.class)
     protected Processor processor;
 
     @Autowired

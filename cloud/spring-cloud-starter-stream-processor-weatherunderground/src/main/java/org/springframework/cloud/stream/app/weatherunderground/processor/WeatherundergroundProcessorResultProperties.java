@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
@@ -13,6 +13,6 @@ import lombok.Data;
  */
 @Data
 @ConfigurationProperties(prefix = "weatherunderground.result")
-public class WeatherUndergroundProcessorResultProperties {
+public class WeatherundergroundProcessorResultProperties {
     private String fit;
 }

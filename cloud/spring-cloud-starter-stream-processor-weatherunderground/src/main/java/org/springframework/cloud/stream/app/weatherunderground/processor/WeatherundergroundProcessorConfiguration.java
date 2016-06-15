@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import java.net.URI;
 import java.util.Map;
@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.cloud.stream.annotation.EnableBinding;
+import org.springframework.cloud.stream.app.weatherunderground.processor.util.DistanceCalculator;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,21 +22,19 @@ import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.messaging.MessageChannel;
 
-import de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.util.DistanceCalculator;
-
 /**
  * @author Nikolai Bock
  *
  */
 @Configuration
-@EnableConfigurationProperties({ WeatherUndergroundProcessorProperties.class,
-        WeatherUndergroundProcessorSearchProperties.class })
+@EnableConfigurationProperties({ WeatherundergroundProcessorProperties.class,
+        WeatherundergroundProcessorSearchProperties.class })
 @EnableBinding(Processor.class)
-public class WeatherUndergroundProcessorConfiguration {
+public class WeatherundergroundProcessorConfiguration {
     
 
     @Autowired
-    private WeatherUndergroundProcessorProperties properties;
+    private WeatherundergroundProcessorProperties properties;
 
     @Bean
     public MessageChannel start() {

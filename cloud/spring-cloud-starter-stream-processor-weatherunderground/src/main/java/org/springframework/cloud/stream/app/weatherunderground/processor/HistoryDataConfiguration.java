@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor;
+package org.springframework.cloud.stream.app.weatherunderground.processor;
 
 import java.net.URI;
 import java.util.Map;
@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
+import org.springframework.cloud.stream.app.weatherunderground.processor.filter.FindBestTimeFitTransformer;
+import org.springframework.cloud.stream.app.weatherunderground.processor.filter.TimeRangeFilter;
+import org.springframework.cloud.stream.app.weatherunderground.processor.util.DateParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -19,22 +22,18 @@ import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.messaging.MessageChannel;
 
-import de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.filter.FindBestTimeFitTransformer;
-import de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.filter.TimeRangeFilter;
-import de.i3mainz.springframework.cloud.stream.app.weatherunderground.processor.util.DateParser;
-
 /**
  * @author Nikolai Bock
  *
  */
 @Configuration
-@EnableConfigurationProperties({ WeatherUndergroundProcessorProperties.class,
-        WeatherUndergroundProcessorResultProperties.class })
+@EnableConfigurationProperties({ WeatherundergroundProcessorProperties.class,
+        WeatherundergroundProcessorResultProperties.class })
 @ConditionalOnProperty(name = "weatherunderground.mode", havingValue = "HISTORY")
 public class HistoryDataConfiguration {
 
     @Autowired
-    private WeatherUndergroundProcessorProperties properties;
+    private WeatherundergroundProcessorProperties properties;
     
     @Autowired
     private MessageChannel start;
