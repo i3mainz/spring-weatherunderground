@@ -15,8 +15,8 @@ public class DistanceCalculator {
 
         GeodeticCalculator calc = new GeodeticCalculator();
         String[] latlon = startPoint.split(",", 2);
-        double latitudeStart = new Double(latlon[0]);
-        double longitudeStart = new Double(latlon[1]);
+        double latitudeStart = Double.parseDouble(latlon[0]);
+        double longitudeStart = Double.parseDouble(latlon[1]);
         calc.setStartingGeographicPoint(longitudeStart, latitudeStart);
         calc.setDestinationGeographicPoint(longitude, latitude);
 

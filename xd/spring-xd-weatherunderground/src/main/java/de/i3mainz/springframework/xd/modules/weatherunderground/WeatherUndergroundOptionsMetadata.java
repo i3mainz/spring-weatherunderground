@@ -30,7 +30,7 @@ public class WeatherUndergroundOptionsMetadata implements ProfileNamesProvider {
     private int filterRange = 5;
     private HistoryResult historyResult = HistoryResult.TIMEFIT;
 
-    public static enum Mode {
+    public enum Mode {
         LIVE("use-live-data"), HISTORY("use-history-data"), FORECAST("use-forecast-data"), HOURLY(
                 "use-forecast-hourly-data");
 
@@ -45,7 +45,7 @@ public class WeatherUndergroundOptionsMetadata implements ProfileNamesProvider {
         }
     }
 
-    public static enum HistoryResult {
+    public enum HistoryResult {
         TIMEFIT("use-timeFit"), TIMERANGE("use-timeRange"), SUMMARY("use-dailySummary");
 
         private String profile;
@@ -222,7 +222,6 @@ public class WeatherUndergroundOptionsMetadata implements ProfileNamesProvider {
         }
         profile.add(this.mode.getProfile());
         profile.add(this.historyResult.getProfile());
-        System.out.println(profile.size());
         return profile.toArray(new String[profile.size()]);
     }
 
