@@ -30,7 +30,6 @@ group = 'org.springframework.cloud.stream.app'
 
 ext{
 	springCloudStreamVersion = '1.0.0.BUILD-SNAPSHOT'
-    geotoolsVersion = '14.0'
     lombokVersion = '1.16.8'
 }
 
@@ -41,13 +40,12 @@ integTest{
 }
 
 dependencies {
+    compile project (':spring-weatherunderground-integration-core')
     compile('org.springframework.cloud.stream.app:app-starters-annotation-common')
 	optional('org.springframework.boot:spring-boot-configuration-processor')
     compile('org.springframework.integration:spring-integration-core')
     compile('org.springframework.integration:spring-integration-http')
     compile("org.projectlombok:lombok:${lombokVersion}")
-    compile("org.geotools:gt-referencing:$geotoolsVersion")
-    compile("org.geotools:gt-epsg-hsql:$geotoolsVersion")
     integTestCompile('org.springframework.cloud:spring-cloud-stream-test-support')
 }
 

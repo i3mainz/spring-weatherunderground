@@ -31,6 +31,7 @@ springxd{
 }
 
 dependencies {
+        compile project (':spring-weatherunderground-integration-core')
 	provided "org.geotools:gt-referencing:$geotoolsVersion"
     provided "org.geotools:gt-epsg-hsql:$geotoolsVersion"
 }

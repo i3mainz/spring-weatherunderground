@@ -36,7 +36,7 @@
 			</int:header-enricher>
 		</int:chain>
 		<bean id="distanceCalc"
-			class="de.i3mainz.springframework.xd.modules.weatherunderground.util.DistanceCalculator"></bean>
+			class="org.springframework.weatherunderground.util.DistanceCalculator"></bean>
 	</beans>
 	<beans profile="use-query">
 		<int:bridge input-channel="processChannel" output-channel="queryChannel" />
@@ -59,7 +59,7 @@
 	</beans>
 	<beans profile="use-history-data">
 		<bean id="dateConverter"
-			class="de.i3mainz.springframework.xd.modules.weatherunderground.util.DateParser">
+			class="org.springframework.weatherunderground.util.DateParser">
 		</bean>
 		<int:header-enricher id="dateEnricher"
 			input-channel="input" output-channel="processChannel">
@@ -82,7 +82,7 @@
 			<int:transformer id="bestFitTimeTransformer"
 				input-channel="mergingChannel" output-channel="preOut">
 				<bean
-					class="de.i3mainz.springframework.xd.modules.weatherunderground.filter.FindBestTimeFitTransformer" />
+					class="org.springframework.weatherunderground.integration.transformer.FindBestTimeFitTransformer" />
 			</int:transformer>
 		</beans>
 		<beans profile="use-timeRange">
@@ -90,7 +90,7 @@
 				<int:splitter id="oberservationSplitter" expression="payload.history.observations" />
 				<int:filter id="timeRangeFilter">
 					<bean
-						class="de.i3mainz.springframework.xd.modules.weatherunderground.filter.TimeRangeFilter">
+						class="org.springframework.weatherunderground.integration.filter.TimeRangeFilter">
 						<property name="timeRange" value="${filterRange}" />
 					</bean>
 				</int:filter>

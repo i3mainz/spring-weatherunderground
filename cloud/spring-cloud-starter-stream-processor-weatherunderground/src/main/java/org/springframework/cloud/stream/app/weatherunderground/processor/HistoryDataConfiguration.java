@@ -10,9 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.cloud.stream.app.weatherunderground.processor.filter.FindBestTimeFitTransformer;
-import org.springframework.cloud.stream.app.weatherunderground.processor.filter.TimeRangeFilter;
-import org.springframework.cloud.stream.app.weatherunderground.processor.util.DateParser;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,6 +18,9 @@ import org.springframework.integration.dsl.IntegrationFlows;
 import org.springframework.integration.dsl.channel.MessageChannels;
 import org.springframework.integration.dsl.http.Http;
 import org.springframework.messaging.MessageChannel;
+import org.springframework.weatherunderground.integration.filter.TimeRangeFilter;
+import org.springframework.weatherunderground.integration.transformer.FindBestTimeFitTransformer;
+import org.springframework.weatherunderground.util.DateParser;
 
 /**
  * @author Nikolai Bock

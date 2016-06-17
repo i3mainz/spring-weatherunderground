@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.xd.modules.weatherunderground.filter;
+package org.springframework.weatherunderground.integration.filter;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -32,7 +32,7 @@ public class TimeRangeFilter {
     public boolean inTimeRange(@Payload Map observation, @Header("mappingTimestamp") LocalDateTime searchedTime) {
 
         Map<String, String> date = (Map<String, String>) observation.get("date");
-        LocalDateTime observationTime = LocalDateTime.of(new Integer(date.get("year").toString()),
+        LocalDateTime observationTime = LocalDateTime.of(new Integer(date.get("year")),
                 new Integer(date.get("mon")), new Integer(date.get("mday")), new Integer(date.get("hour")),
                 new Integer(date.get("min")), 0, 0);
 

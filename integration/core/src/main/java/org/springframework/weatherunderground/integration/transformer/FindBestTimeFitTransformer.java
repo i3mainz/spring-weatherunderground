@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.springframework.cloud.stream.app.weatherunderground.processor.filter;
+package org.springframework.weatherunderground.integration.transformer;
 
 import java.time.Duration;
 import java.time.LocalDateTime;

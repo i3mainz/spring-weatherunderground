@@ -1,7 +1,7 @@
 /**
  * 
  */
-package de.i3mainz.springframework.xd.modules.weatherunderground.util;
+package org.springframework.weatherunderground.util;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
