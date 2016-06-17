@@ -28,7 +28,7 @@ public class FindBestTimeFitTransformer {
             Map<String, Object> result = null;
             for (Map<String, Object> observation : payload) {
                 Map<String, String> date = (Map<String, String>) observation.get("date");
-                LocalDateTime observationTime = LocalDateTime.of(new Integer(date.get("year").toString()),
+                LocalDateTime observationTime = LocalDateTime.of(new Integer(date.get("year")),
                         new Integer(date.get("mon")), new Integer(date.get("mday")), new Integer(date.get("hour")),
                         new Integer(date.get("min")), 0, 0);
                 Duration period = Duration.between(searchedTime, observationTime);
