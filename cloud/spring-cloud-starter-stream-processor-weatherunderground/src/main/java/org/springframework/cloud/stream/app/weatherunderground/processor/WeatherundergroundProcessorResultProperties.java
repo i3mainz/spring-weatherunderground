@@ -14,5 +14,8 @@ import lombok.Data;
 @Data
 @ConfigurationProperties(prefix = "weatherunderground.result")
 public class WeatherundergroundProcessorResultProperties {
+    /**
+     * Result variant (TIMEFIT, TIMERANGE, SUMMARY) 
+     */
     private String fit;
 }

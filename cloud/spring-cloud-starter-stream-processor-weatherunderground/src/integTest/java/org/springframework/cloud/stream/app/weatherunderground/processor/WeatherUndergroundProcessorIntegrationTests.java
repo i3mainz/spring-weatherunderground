@@ -47,11 +47,9 @@ public abstract class WeatherUndergroundProcessorIntegrationTests {
     public static class TestWeatherUndergroundLiveRequest extends WeatherUndergroundProcessorIntegrationTests {
         @Test
         public void testInsert() throws JsonProcessingException {
-            System.out.println("Hallo");
             processor.input().send(new GenericMessage<String>("Hallo Welt"));
             BlockingQueue<Message<?>> messages = messageCollector.forChannel(processor.output());
-            System.out.println(messages.size());
-            messages.forEach(m -> System.out.println(m.getPayload()));
+            messages.stream().map(Message::getPayload).forEach(System.out::println);
         }
     }
 

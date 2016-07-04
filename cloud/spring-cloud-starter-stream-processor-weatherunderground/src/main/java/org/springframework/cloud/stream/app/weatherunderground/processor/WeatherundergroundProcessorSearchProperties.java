@@ -14,5 +14,8 @@ import lombok.Data;
 @Data
 @ConfigurationProperties(prefix = "weatherunderground.search")
 public class WeatherundergroundProcessorSearchProperties {
+    /**
+     * Whether private weatherstations nearby should be used.
+     */
     private boolean nearbypws = false;
 }
