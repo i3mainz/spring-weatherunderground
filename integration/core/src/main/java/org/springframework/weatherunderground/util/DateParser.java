@@ -33,7 +33,7 @@ public class DateParser {
         }
     }
 
-    private LocalDateTime createDate(Date date) {
+    private static LocalDateTime createDate(Date date) {
         return LocalDateTime.ofInstant(Instant.ofEpochMilli(date.getTime()), ZoneId.systemDefault());
     }
 
