@@ -18,7 +18,6 @@ buildscript {
 
 ext{ 
 	springXdVersion = '1.3.1.RELEASE' 
-	geotoolsVersion = '14-SNAPSHOT'	
 }
 
 apply plugin: 'de.i3mainz.spring-xd-module'
@@ -31,7 +30,7 @@ springxd{
 }
 
 dependencies {
-        compile project (':spring-weatherunderground-integration-core')
+    compile project (':spring-weatherunderground-integration-core')
 	provided "org.geotools:gt-referencing:$geotoolsVersion"
     provided "org.geotools:gt-epsg-hsql:$geotoolsVersion"
 }
