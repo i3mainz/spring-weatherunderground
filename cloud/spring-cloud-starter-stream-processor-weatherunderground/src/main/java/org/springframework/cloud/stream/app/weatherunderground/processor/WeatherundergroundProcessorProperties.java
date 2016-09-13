@@ -31,4 +31,16 @@ public class WeatherundergroundProcessorProperties {
      * Position info (SpEL)
      */
     private String position;
+    
+    
+    /**
+     * Date for History data (SpEL)
+     */
+    private String date;
+    
+    
+    /**
+     * Dateformat (SpEL) 
+     */
+    private String dateFormat;
 }

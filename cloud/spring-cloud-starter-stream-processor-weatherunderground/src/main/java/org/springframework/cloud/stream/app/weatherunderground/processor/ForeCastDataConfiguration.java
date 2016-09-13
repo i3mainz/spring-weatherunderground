@@ -3,7 +3,6 @@
  */
 package org.springframework.cloud.stream.app.weatherunderground.processor;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +25,13 @@ import org.springframework.messaging.MessageChannel;
  */
 @Configuration
 @Import(SpelExpressionConverterConfiguration.class)
-@EnableConfigurationProperties(value = { WeatherundergroundProcessorProperties.class })
+@EnableConfigurationProperties(value = {
+        WeatherundergroundProcessorProperties.class })
 public class ForeCastDataConfiguration {
 
     @Autowired
     private WeatherundergroundProcessorProperties properties;
-    
+
     @Autowired
     private MessageChannel start;
 
@@ -59,18 +59,22 @@ public class ForeCastDataConfiguration {
     @Bean
     @ConditionalOnProperty(name = "weatherunderground.mode", havingValue = "FORECAST")
     public IntegrationFlow createForecastRequest(
-            @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/forecast/q/{query}.json") URI uri) {
-        return IntegrationFlows
-                .from(queryChannel).handle(Http.outboundGateway(uri).httpMethod(HttpMethod.GET)
-                        .expectedResponseType(Map.class).uriVariable("query", properties.getQuery()))
+            @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/forecast/q/{query}.json") String uri) {
+        return IntegrationFlows.from(queryChannel)
+                .handle(Http.outboundGateway(uri).httpMethod(HttpMethod.GET)
+                        .expectedResponseType(Map.class)
+                        .uriVariable("query", properties.getQuery()))
                 .channel(preOut).get();
     }
 
     @Bean
     @ConditionalOnProperty(name = "weatherunderground.mode", havingValue = "HOURLY")
     public IntegrationFlow createHourlyRequest(
-            @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/hourly/q/{query}.json") URI uri) {
-        return IntegrationFlows.from("queryChannel").handle(Http.outboundGateway(uri).httpMethod(HttpMethod.GET)
-                .expectedResponseType(Map.class).uriVariable("query", properties.getQuery())).channel("preOut").get();
+            @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/hourly/q/{query}.json") String uri) {
+        return IntegrationFlows.from("queryChannel")
+                .handle(Http.outboundGateway(uri).httpMethod(HttpMethod.GET)
+                        .expectedResponseType(Map.class)
+                        .uriVariable("query", properties.getQuery()))
+                .channel("preOut").get();
     }
 }

@@ -43,13 +43,74 @@ public abstract class WeatherUndergroundProcessorIntegrationTests {
     protected MessageCollector messageCollector;
 
     @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
-            "weatherunderground.query=new String(\"de/Mainz\")", "weatherunderground.mode=LIVE" })
-    public static class TestWeatherUndergroundLiveRequest extends WeatherUndergroundProcessorIntegrationTests {
+            "weatherunderground.query=new String(\"de/Mainz\")",
+            "weatherunderground.mode=LIVE" })
+    public static class TestWeatherUndergroundLiveRequest
+            extends WeatherUndergroundProcessorIntegrationTests {
         @Test
-        public void testInsert() throws JsonProcessingException {
-            processor.input().send(new GenericMessage<String>("Hallo Welt"));
-            BlockingQueue<Message<?>> messages = messageCollector.forChannel(processor.output());
-            messages.stream().map(Message::getPayload).forEach(System.out::println);
+        public void request() throws JsonProcessingException {
+            processor.input().send(new GenericMessage<String>(""));
+            BlockingQueue<Message<?>> messages = messageCollector
+                    .forChannel(processor.output());
+            messages.stream().map(Message::getPayload)
+                    .forEach(System.out::println);
+        }
+    }
+
+    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+            "weatherunderground.query=new String(\"de/Mainz\")",
+            "weatherunderground.mode=HISTORY",
+            "weatherunderground.date=new String(\"2016-09-12 11:30:00\")",
+            "weatherunderground.dateFormat=new String(\"yyyy-MM-dd HH:mm:ss\")",
+            "weatherunderground.result.fit=NEAREST"/*
+                                                    * ,
+                                                    * "logging.level.org.springframework.web: DEBUG"
+                                                    */ })
+    public static class TestWeatherUndergroundHistoryRequest
+            extends WeatherUndergroundProcessorIntegrationTests {
+        @Test
+        public void request() throws JsonProcessingException {
+            processor.input().send(new GenericMessage<String>(""));
+            BlockingQueue<Message<?>> messages = messageCollector
+                    .forChannel(processor.output());
+            messages.stream().map(Message::getPayload)
+                    .forEach(System.out::println);
+        }
+    }
+
+    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+            "weatherunderground.query=new String(\"de/Mainz\")",
+            "weatherunderground.mode=FORECAST"
+            /*
+             * , "logging.level.org.springframework.web: DEBUG"
+             */ })
+    public static class TestWeatherUndergroundForecastRequest
+            extends WeatherUndergroundProcessorIntegrationTests {
+        @Test
+        public void request() throws JsonProcessingException {
+            processor.input().send(new GenericMessage<String>(""));
+            BlockingQueue<Message<?>> messages = messageCollector
+                    .forChannel(processor.output());
+            messages.stream().map(Message::getPayload)
+                    .forEach(System.out::println);
+        }
+    }
+
+    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+            "weatherunderground.query=new String(\"de/Mainz\")",
+            "weatherunderground.mode=FORECAST"
+            /*
+             * , "logging.level.org.springframework.web: DEBUG"
+             */ })
+    public static class TestWeatherUndergroundHourlyRequest
+            extends WeatherUndergroundProcessorIntegrationTests {
+        @Test
+        public void request() throws JsonProcessingException {
+            processor.input().send(new GenericMessage<String>(""));
+            BlockingQueue<Message<?>> messages = messageCollector
+                    .forChannel(processor.output());
+            messages.stream().map(Message::getPayload)
+                    .forEach(System.out::println);
         }
     }
 

@@ -3,7 +3,6 @@
  */
 package org.springframework.cloud.stream.app.weatherunderground.processor;
 
-import java.net.URI;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,10 @@ public class HistoryDataConfiguration {
 
     @Autowired
     private WeatherundergroundProcessorProperties properties;
-    
+
+    @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/history_{date}/q/{query}.json")
+    private String uri;
+
     @Autowired
     private MessageChannel start;
 
@@ -49,7 +51,7 @@ public class HistoryDataConfiguration {
 
     @Bean
     public MessageChannel mergingChannel() {
-        return MessageChannels.queue().get();
+        return MessageChannels.direct().get();
     }
 
     @Bean
@@ -61,40 +63,51 @@ public class HistoryDataConfiguration {
     public IntegrationFlow setup() {
         return IntegrationFlows.from(start)
                 .enrichHeaders(h -> h.headerExpression("mappingTimestamp",
-                        "@dateConverter.createDate(${weatherunderground.date},${weatherunderground.dateFormat})"))
+                        "@dateConverter.createDate(" + properties.getDate()
+                                + "," + properties.getDateFormat() + ")"))
                 .channel(processChannel).get();
     }
 
     @Bean
-    public IntegrationFlow process(
-            @Value("http://api.wunderground.com/api/${weatherunderground.apikey}/history_{date}/q/{query}.json") URI uri) {
+    public IntegrationFlow process() {
         return IntegrationFlows.from(queryChannel)
-                .handle(Http.outboundGateway(uri).httpMethod(HttpMethod.GET).expectedResponseType(Map.class)
+                .handle(Http.outboundGateway(uri).httpMethod(HttpMethod.GET)
+                        .expectedResponseType(Map.class)
                         .uriVariable("query", properties.getQuery())
-                        .uriVariable("date", "@dateConverter.parse(headers['mappingTimestamp'],'yyyMMdd')"))
+                        .uriVariable("date",
+                                "@dateConverter.parse(headers['mappingTimestamp'],'yyyMMdd')"))
                 .channel(mergingChannel()).get();
     }
 
     @Bean
     @ConditionalOnProperty(name = "weatherunderground.result.fit", havingValue = "NEAREST")
-    public IntegrationFlow fitNearest() {
-        return IntegrationFlows.from(mergingChannel()).transform(new FindBestTimeFitTransformer()).channel(preOut)
-                .get();
+    public FindBestTimeFitTransformer bestFitTransformer() {
+        return new FindBestTimeFitTransformer();
+    }
+
+    @Bean
+    @ConditionalOnProperty(name = "weatherunderground.result.fit", havingValue = "NEAREST")
+    public IntegrationFlow fitNearest(FindBestTimeFitTransformer transformer) {
+        return IntegrationFlows.from(mergingChannel()).transform(transformer)
+                .channel(preOut).get();
     }
 
     @Bean
     @ConditionalOnProperty(name = "weatherunderground.result.fit", havingValue = "RANGE")
-    public IntegrationFlow fitRange(@Value("${weatherunderground.result.fitTimeRange}") int timeRange) {
+    public IntegrationFlow fitRange(
+            @Value("${weatherunderground.result.fitTimeRange}") int timeRange) {
         TimeRangeFilter filter = new TimeRangeFilter();
         filter.setTimeRange(timeRange);
-        return IntegrationFlows.from(mergingChannel()).split("payload.history.observations").filter(filter)
+        return IntegrationFlows.from(mergingChannel())
+                .split("payload.history.observations").filter(filter)
                 .channel(preOut).get();
     }
 
     @Bean
     @ConditionalOnProperty(name = "weatherunderground.result.fit", havingValue = "SUMMARY")
     public IntegrationFlow fitSummary() {
-        return IntegrationFlows.from(mergingChannel()).transform("payload.history.dailysummary").channel(preOut)
+        return IntegrationFlows.from(mergingChannel())
+                .transform("payload.history.dailysummary").channel(preOut)
                 .get();
     }
 
