@@ -29,8 +29,9 @@ public class TimeRangeFilter {
 
 
     @Filter
-    public boolean inTimeRange(@Payload Map observation, @Header("mappingTimestamp") LocalDateTime searchedTime) {
+    public boolean inTimeRange(@Payload Map<?, ?> observation, @Header("mappingTimestamp") LocalDateTime searchedTime) {
 
+        @SuppressWarnings("unchecked")
         Map<String, String> date = (Map<String, String>) observation.get("date");
         LocalDateTime observationTime = LocalDateTime.of(new Integer(date.get("year")),
                 new Integer(date.get("mon")), new Integer(date.get("mday")), new Integer(date.get("hour")),

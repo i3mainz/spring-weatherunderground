@@ -9,17 +9,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.test.IntegrationTest;
-import org.springframework.boot.test.SpringApplicationConfiguration;
-import org.springframework.boot.test.WebIntegrationTest;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.cloud.stream.annotation.Bindings;
-import org.springframework.cloud.stream.app.weatherunderground.processor.WeatherundergroundProcessorConfiguration;
 import org.springframework.cloud.stream.messaging.Processor;
 import org.springframework.cloud.stream.test.binder.MessageCollector;
 import org.springframework.messaging.Message;
 import org.springframework.messaging.support.GenericMessage;
-import org.springframework.test.annotation.DirtiesContext;
-import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -29,10 +26,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * @author Nikolai Bock
  *
  */
-@RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = WeatherUndergroundProcessorIntegrationTests.WeatherUndergroundProcessorApplication.class)
-@IntegrationTest("{server.port=-1}")
-@DirtiesContext
+@RunWith(SpringRunner.class)
+@SpringBootTest(classes = WeatherUndergroundProcessorIntegrationTests.WeatherUndergroundProcessorApplication.class, webEnvironment=WebEnvironment.RANDOM_PORT)
 public abstract class WeatherUndergroundProcessorIntegrationTests {
 
     @Autowired
@@ -42,7 +37,7 @@ public abstract class WeatherUndergroundProcessorIntegrationTests {
     @Autowired
     protected MessageCollector messageCollector;
 
-    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+    @SpringBootTest({ "weatherunderground.search.nearbypws=false",
             "weatherunderground.query=new String(\"de/Mainz\")",
             "weatherunderground.mode=LIVE" })
     public static class TestWeatherUndergroundLiveRequest
@@ -57,7 +52,7 @@ public abstract class WeatherUndergroundProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+    @SpringBootTest({ "weatherunderground.search.nearbypws=false",
             "weatherunderground.query=new String(\"de/Mainz\")",
             "weatherunderground.mode=HISTORY",
             "weatherunderground.date=new String(\"2016-09-12 11:30:00\")",
@@ -78,7 +73,7 @@ public abstract class WeatherUndergroundProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+    @SpringBootTest({ "weatherunderground.search.nearbypws=false",
             "weatherunderground.query=new String(\"de/Mainz\")",
             "weatherunderground.mode=FORECAST"
             /*
@@ -96,7 +91,7 @@ public abstract class WeatherUndergroundProcessorIntegrationTests {
         }
     }
 
-    @WebIntegrationTest({ "weatherunderground.search.nearbypws=false",
+    @SpringBootTest({ "weatherunderground.search.nearbypws=false",
             "weatherunderground.query=new String(\"de/Mainz\")",
             "weatherunderground.mode=FORECAST"
             /*
