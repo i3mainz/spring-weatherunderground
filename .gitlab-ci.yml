@@ -1,0 +1,27 @@
+stages:
+ - build
+ - test
+
+before_script:
+    - export GRADLE_USER_HOME=`pwd`/.gradle
+
+cache:
+  paths:
+     - .gradle/wrapper
+     - .gradle/caches
+     
+build:
+  stage: build
+  script:
+    - ./gradlew clean build
+  tags:
+    - java8
+test:
+  stage: test
+  before_script:
+    - echo "weatherunderground.apikey=$weatherundergroundapikey" >> cloud/starter/processor/src/integTest/resources/application.properties
+  script:
+    - ./gradlew integTest
+  tags:
+    - java8
+   
