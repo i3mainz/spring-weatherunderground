@@ -1,0 +1,12 @@
+rootProject.name = "spring-weatherunderground"
+
+include ":spring-weatherunderground-integration-core"
+include ":spring-xd-weatherunderground"
+include ":spring-cloud-starter-stream-processor-weatherunderground"
+
+project(':spring-weatherunderground-integration-core').projectDir = new File(settingsDir, 'integration/core')
+project(':spring-xd-weatherunderground').projectDir = new File(settingsDir, 'xd/spring-xd-weatherunderground')
+project(':spring-cloud-starter-stream-processor-weatherunderground').projectDir = new File(settingsDir, 'cloud/starter/processor')
+
+
+
